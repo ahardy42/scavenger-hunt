@@ -6,12 +6,14 @@ type ProviderProps = {
 
 type FormState = {
     activity: string,
-    distance: string
+    distance: string,
+    difficulty: string
 }
 
 type FormActions = 
     | {type: 'SET_ACTIVITY', payload: string}
     | {type: 'SET_DISTANCE', payload: string}
+    | {type: 'SET_DIFFICULTY', payload: string}
     | {type: 'RESET_STATE'}
 
 const reducer = (state: FormState, action: FormActions) => {
@@ -22,6 +24,8 @@ const reducer = (state: FormState, action: FormActions) => {
             return {...state, activity: action.payload}
         case 'SET_DISTANCE':
             return {...state, distance: action.payload}
+        case 'SET_DIFFICULTY':
+            return {...state, difficulty: action.payload}
         default:
             return state
     }
@@ -31,7 +35,7 @@ export const FormContext = createContext(null);
 
 export const FormProvider = ({ children }: ProviderProps) => {
     return (
-        <FormContext.Provider value={useReducer(reducer, {activity: '', distance: ''})}>
+        <FormContext.Provider value={useReducer(reducer, {activity: '', distance: '', difficulty: ''})}>
             {children}
         </FormContext.Provider>
     );

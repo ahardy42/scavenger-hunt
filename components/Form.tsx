@@ -2,10 +2,11 @@ import React from 'react'
 import { StyleSheet, View, Text } from 'react-native';
 import { RadioButton } from 'react-native-material-ui';
 import { useFormContext } from '../context/FormContext';
+import MyRadioButton from './MyRadioButton';
 
 type FormProps = {
     children: string,
-    contextName: 'SET_ACTIVITY'|'SET_DISTANCE',
+    contextName: 'SET_ACTIVITY' | 'SET_DISTANCE' | 'SET_DIFFICULTY',
     buttonsArr: string[],
 }
 
@@ -13,14 +14,20 @@ export default function Form({ children, buttonsArr, contextName }: FormProps) {
 
     const [formState, formDispatch] = useFormContext();
 
-    const value = contextName.includes('ACTIVITY') ? formState.activity : formState.distance;
+    const handlePress: (value: string) => void = value => {
+        formDispatch({ type: contextName, payload: value})
+    }
+
+    const value = formState[contextName.slice(4).toLowerCase()]
 
     return (
         <View style={styles.container}>
             <Text style={styles.text}>{children}</Text>
             <View style={styles.buttonContainer}>
-                {buttonsArr.map(el => {
-                    return <RadioButton checked={value === el} value={el} label={el} onSelect={value => formDispatch({type: contextName, payload: value})} />
+                {buttonsArr.map((el, i) => {
+                    return (
+                        <MyRadioButton height={50} key={i} value={el} checked={value === el} handlePress={handlePress}>{el}</MyRadioButton>
+                    );
                 })}
             </View>
         </View>
@@ -29,7 +36,8 @@ export default function Form({ children, buttonsArr, contextName }: FormProps) {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 4
+        flex: 4,
+        marginTop: 5
     },
     buttonContainer: {
         flex: 1,
@@ -38,7 +46,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     text: {
-        fontSize: 15,
+        fontSize: 25,
         textAlign: 'center'
     }
 })
