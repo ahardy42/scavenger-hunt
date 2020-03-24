@@ -41,6 +41,10 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
                 Activity Type
             </Form>
             <Divider />
+            <Form buttonsArr={['easy', 'medium', 'hard']} contextName='SET_DIFFICULTY'>
+                Difficulty
+            </Form>
+            <Divider />
             <Form buttonsArr={['short', 'medium', 'long']} contextName='SET_DISTANCE'>
                 Distance
             </Form>
