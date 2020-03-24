@@ -8,8 +8,10 @@ import { RootStackParamList } from '../App';
 import { StackNavigationProp } from '@react-navigation/stack';
 // utils
 import { filterMarkersByProximity, initMarkerList } from '../utils/markers';
+import { useFormContext } from '../context/FormContext';
 import { Feature, Point } from '@turf/turf';
 import MarkerList from '../components/MarkerList';
+import StartModal from '../components/StartModal';
 
 type ProfileScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -23,15 +25,19 @@ type HomeScreenProps = {
 export default function MapScreen({ navigation }: HomeScreenProps) {
 
     const [shouldFollow, setShouldFollow] = React.useState<boolean>(true);
-    const [region, setRegion] = React.useState<Region>({
+    const initialRegion = {
         latitude: 39.8333333,
         longitude: -98.585522,
         latitudeDelta: 50,
         longitudeDelta: 50
-    });
+    }
+    const [region, setRegion] = React.useState<Region>(initialRegion);
     const [location, setLocation] = React.useState<LocationData>(null);
     const removeRef = React.useRef(null);
     const [markerList, setList] = React.useState<Feature<Point>[]>([]);
+    const [timer, setTimer] = React.useState<number>(5);
+    const timerRef = React.useRef<number>(null);
+    const [formState] = useFormContext();
 
     // get location of user on load
     // start following location / stop following based on a boolean
@@ -85,6 +91,21 @@ export default function MapScreen({ navigation }: HomeScreenProps) {
 
     }, []);
 
+    // start countdown
+    React.useEffect(() => {
+        if (markerList.length) {
+            timerRef.current = window.setInterval(() => {
+                setTimer(time => time - 1)
+            }, 1000);
+        }
+    }, [markerList])
+
+    React.useEffect(() => {
+        if (timer < -5) {
+            clearInterval(timerRef.current);
+        }
+    }, [timer])
+
     // remove nearby markers on location change
     React.useEffect(() => {
         setList(prevState => filterMarkersByProximity(location, prevState))
@@ -92,7 +113,13 @@ export default function MapScreen({ navigation }: HomeScreenProps) {
 
     return (
         <View style={styles.container}>
-            <MapView style={styles.mapStyle} initialRegion={region}>
+            <StartModal timer={timer}/>
+            <MapView 
+                style={styles.mapStyle} 
+                initialRegion={initialRegion} 
+                followsUserLocation={timer > 0} 
+                showsUserLocation={timer > 0 || formState.difficulty === 'easy'}
+            >
                 <MarkerList markerList={markerList}/>
             </MapView>
             
