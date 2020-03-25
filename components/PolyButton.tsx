@@ -1,19 +1,21 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import {LatLng} from 'react-native-maps';
 
 type ButtonProps = {
     coordsLen: number,
-    setIsEditing: React.Dispatch<React.SetStateAction<boolean>>
+    setBoundary: React.Dispatch<React.SetStateAction<LatLng[]>>
 }
 
-export default function PolyButton({ coordsLen, setIsEditing }) {
+export default function PolyButton({ coordsLen, coords, setBoundary }) {
 
     const handlePress: () => void = () => {
         if (coordsLen < 3) return;
-        setIsEditing(false);
+        setBoundary(coords);
     }
+    
     return (
-        <TouchableOpacity onPress={() => setIsEditing(false)} style={styles.button}>
+        <TouchableOpacity onPress={handlePress} style={styles.button}>
             <Text style={styles.text}>Set Boundary</Text>
         </TouchableOpacity>
     );
@@ -22,10 +24,19 @@ export default function PolyButton({ coordsLen, setIsEditing }) {
 const styles = StyleSheet.create({
     button: {
         position: 'absolute',
+        backgroundColor: '#fff',
         bottom: 50,
         left: '50%',
         marginLeft: -50,
-        width: 100,
+        padding: 10,
+        borderRadius: 5,
+        shadowColor: '#000',
+        shadowOpacity: 0.6,
+        shadowRadius: 3,
+        shadowOffset: {
+            width: 2,
+            height: 2
+        },
         zIndex: 500
     },
     text: {

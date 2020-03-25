@@ -1,17 +1,14 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Polygon, MapEvent, LatLng, Point, Polyline, Circle,  } from 'react-native-maps';
 
 // hook to emit polygon / editing state
-export const usePolygonCreator: () => [LatLng[], (e: any, isEditing: boolean) => void] = () => {
+export const usePolygonCreator: () => [LatLng[], (e: any) => void] = () => {
 
     const [coords, setCoords] = React.useState<LatLng[]>([]);
 
-    const addToPolygon: (e: any, isEditing: boolean) => void = (e, isEditing) => {
+    const addToPolygon: (e: any) => void = e => {
         e.persist();
-        if (!isEditing) return;
         setCoords(prevState => [...prevState, e.nativeEvent.coordinate])
-        // console.log(e.nativeEvent)
     }
 
     return [coords, addToPolygon]

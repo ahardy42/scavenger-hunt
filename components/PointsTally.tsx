@@ -1,19 +1,19 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Card } from 'react-native-material-ui';
+import { useMarkerContext } from '../context/MarkerContext';
 
-type PointsTallyProps = {
-    markerListLen: number,
-    initialLen: number
-}
+export default function PointsTally() {
 
-export default function PointsTally({ markerListLen, initialLen }) {
+    const [markerState] = useMarkerContext();
+
+    const { markerListlen, numHit } = markerState;
     return (
         <View style={styles.container}>
             <Card >
                 <View>
-                    <Text style={styles.text}>Points: {(initialLen - markerListLen) * 10}</Text>
-                    <Text style={styles.text}>Markers: {markerListLen}</Text>
+                    <Text style={styles.text}>Points: {numHit * 10}</Text>
+                    <Text style={styles.text}>Markers: {markerListlen}</Text>
                 </View>
             </Card>
         </View>
