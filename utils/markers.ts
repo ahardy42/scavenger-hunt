@@ -1,5 +1,6 @@
 import { LocationData } from "expo-location";
 import { circle, point, randomPoint, bbox, BBox, Feature, Point, distance } from '@turf/turf';
+import { snapArray } from './api';
 
 const generateBbox: (location: LocationData, radius: number) => BBox = (location, radius) => {
     // generate a bbox from location and a radius
@@ -14,6 +15,12 @@ const filterFunc: (feature: Feature<Point>, location: LocationData) => boolean =
 export const initMarkerList: (location: LocationData, len: number) => Feature<Point>[] = (location, len) => {
     let markerArray = randomPoint(len, { bbox: generateBbox(location, 1000) }).features;
     return markerArray;
+}
+
+export const initSnappedMarkerList: (location: LocationData, len: number) => Promise<Feature<Point>[]> = async (location, len) => {
+    let markerArray = randomPoint(len, { bbox: generateBbox(location, 1000) }).features;
+    let updatedArray = await snapArray(markerArray);
+    return updatedArray;
 }
 
 export const filterMarkersByProximity: (location: LocationData, markerList: Feature<Point>[]) => Feature<Point>[] = (location, markerList) => {
