@@ -7,11 +7,12 @@ import { LocationData, Accuracy } from 'expo-location';
 import { RootStackParamList } from '../App';
 import { StackNavigationProp } from '@react-navigation/stack';
 // utils
-import { filterMarkersByProximity, initMarkerList } from '../utils/markers';
+import { filterMarkersByProximity, initMarkerList, initSnappedMarkerList } from '../utils/markers';
 import { useFormContext } from '../context/FormContext';
 import { Feature, Point } from '@turf/turf';
 import MarkerList from '../components/MarkerList';
 import StartModal from '../components/StartModal';
+import PointsTally from '../components/PointsTally';
 
 type ProfileScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -24,7 +25,6 @@ type HomeScreenProps = {
 
 export default function MapScreen({ navigation }: HomeScreenProps) {
 
-    const [shouldFollow, setShouldFollow] = React.useState<boolean>(true);
     const initialRegion = {
         latitude: 39.8333333,
         longitude: -98.585522,
@@ -73,7 +73,12 @@ export default function MapScreen({ navigation }: HomeScreenProps) {
 
                 let location = await Location.getCurrentPositionAsync({});
                 // init markers
-                setList(initMarkerList(location, 10))
+                if (formState.activity === 'on-road') {
+                    let list = await initSnappedMarkerList(location, 10);
+                    setList(list);
+                } else {
+                    setList(initMarkerList(location, 10))
+                }
                 // set the region
                 setRegion({
                     latitude: location.coords.latitude,
@@ -113,6 +118,7 @@ export default function MapScreen({ navigation }: HomeScreenProps) {
 
     return (
         <View style={styles.container}>
+            <PointsTally initialLen={10} markerListLen={markerList.length} />
             <StartModal timer={timer}/>
             <MapView 
                 style={styles.mapStyle} 
