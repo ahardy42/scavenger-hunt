@@ -1,24 +1,30 @@
 import { LocationData } from "expo-location";
-import { circle, point, randomPoint, bbox, BBox, Feature, Point, distance } from '@turf/turf';
+import { LatLng } from 'react-native-maps';
+import { circle, point, randomPoint, bbox, BBox, Feature, Point, distance, lineString } from '@turf/turf';
 import { snapArray } from './api';
 
-const generateBbox: (location: LocationData, radius: number) => BBox = (location, radius) => {
-    // generate a bbox from location and a radius
-    let circleAroundPosition = circle(point([location.coords.longitude, location.coords.latitude]), radius, { units: 'meters' })
-    return bbox(circleAroundPosition);
+const generateBbox: (boundary: LatLng[]) => BBox = (boundary) => {
+    // generate a bbox from a boundary array drawn on a map. this is used to create random marker locations
+    try {
+        let poly = lineString(boundary.map(el => [el.longitude, el.latitude]))
+        console.log(poly);
+        return bbox(poly);
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 const filterFunc: (feature: Feature<Point>, location: LocationData) => boolean = (feature, location) => {
     return distance([location.coords.longitude, location.coords.latitude], feature.geometry.coordinates, { units: 'meters' }) > 5
 }
 
-export const initMarkerList: (location: LocationData, len: number) => Feature<Point>[] = (location, len) => {
-    let markerArray = randomPoint(len, { bbox: generateBbox(location, 1000) }).features;
+export const initMarkerList: (boundary: LatLng[], len: number) => Feature<Point>[] = (boundary, len) => {
+    let markerArray = randomPoint(len, { bbox: generateBbox(boundary) }).features;
     return markerArray;
 }
 
-export const initSnappedMarkerList: (location: LocationData, len: number) => Promise<Feature<Point>[]> = async (location, len) => {
-    let markerArray = randomPoint(len, { bbox: generateBbox(location, 1000) }).features;
+export const initSnappedMarkerList: (boundary: LatLng[], len: number) => Promise<Feature<Point>[]> = async (boundary, len) => {
+    let markerArray = randomPoint(len, { bbox: generateBbox(boundary) }).features;
     let updatedArray = await snapArray(markerArray);
     return updatedArray;
 }

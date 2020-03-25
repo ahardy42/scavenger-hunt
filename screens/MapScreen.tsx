@@ -10,9 +10,12 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { filterMarkersByProximity, initMarkerList, initSnappedMarkerList } from '../utils/markers';
 import { useFormContext } from '../context/FormContext';
 import { Feature, Point } from '@turf/turf';
+// components
 import MarkerList from '../components/MarkerList';
 import StartModal from '../components/StartModal';
 import PointsTally from '../components/PointsTally';
+import { usePolygonCreator, PolyBoundary } from '../components/PolyBoundary';
+import PolyButton from '../components/PolyButton';
 
 type ProfileScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -35,6 +38,10 @@ export default function MapScreen({ navigation }: HomeScreenProps) {
     const [location, setLocation] = React.useState<LocationData>(null);
     const removeRef = React.useRef(null);
     const [markerList, setList] = React.useState<Feature<Point>[]>([]);
+    // setting the polygon boundary to use in game
+    const [isEditing, setEditing] = React.useState<boolean>(true);
+    const [boundary, setBoundary] = React.useState<LatLng[]>([]);
+    const [coords, addToPolygon] = usePolygonCreator();
     const [timer, setTimer] = React.useState<number>(5);
     const timerRef = React.useRef<number>(null);
     const [formState] = useFormContext();
@@ -72,13 +79,6 @@ export default function MapScreen({ navigation }: HomeScreenProps) {
                 }
 
                 let location = await Location.getCurrentPositionAsync({});
-                // init markers
-                if (formState.activity === 'on-road') {
-                    let list = await initSnappedMarkerList(location, 10);
-                    setList(list);
-                } else {
-                    setList(initMarkerList(location, 10))
-                }
                 // set the region
                 setRegion({
                     latitude: location.coords.latitude,
@@ -98,12 +98,10 @@ export default function MapScreen({ navigation }: HomeScreenProps) {
 
     // start countdown
     React.useEffect(() => {
-        if (markerList.length) {
-            timerRef.current = window.setInterval(() => {
-                setTimer(time => time - 1)
-            }, 1000);
-        }
-    }, [markerList])
+        timerRef.current = window.setInterval(() => {
+            setTimer(time => time - 1)
+        }, 1000);
+    }, [])
 
     React.useEffect(() => {
         if (timer < -5) {
@@ -116,6 +114,29 @@ export default function MapScreen({ navigation }: HomeScreenProps) {
         setList(prevState => filterMarkersByProximity(location, prevState))
     }, [location])
 
+    React.useEffect(() => {
+        if (!isEditing && coords.length) {
+            setBoundary(coords);
+        }
+    }, [isEditing, coords])
+
+    React.useEffect(() => {
+        if (boundary.length) {
+            // init markers
+            if (formState.activity === 'on-road') {
+                initSnappedMarkerList(boundary, 10)
+                    .then(list => {
+                        setList(list);
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    })
+            } else {
+                setList(initMarkerList(boundary, 10))
+            }
+        }
+    }, [boundary])
+
     return (
         <View style={styles.container}>
             <PointsTally initialLen={10} markerListLen={markerList.length} />
@@ -123,12 +144,14 @@ export default function MapScreen({ navigation }: HomeScreenProps) {
             <MapView 
                 style={styles.mapStyle} 
                 initialRegion={initialRegion} 
+                onPress={e => addToPolygon(e, isEditing)}
                 followsUserLocation={timer > 0} 
                 showsUserLocation={timer > 0 || formState.difficulty === 'easy'}
             >
                 <MarkerList markerList={markerList}/>
+                {isEditing && <PolyBoundary coords={coords} />}
             </MapView>
-            
+            {isEditing && <PolyButton coordsLen={coords.length} setIsEditing={setEditing}/>}
         </View>
     );
 }
