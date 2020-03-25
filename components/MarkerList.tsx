@@ -1,5 +1,6 @@
 import React from 'react';
-import { Marker, LatLng } from 'react-native-maps';
+import { Text } from 'react-native';
+import { Marker } from 'react-native-maps';
 import Svg, { Path } from 'react-native-svg';
 import { Feature, Point } from '@turf/turf';
 

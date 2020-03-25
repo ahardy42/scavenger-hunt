@@ -1,29 +1,27 @@
 import { LocationData } from "expo-location";
-import { circle, point, randomPoint, bbox, BBox, Feature, Point, distance } from '@turf/turf';
+import { LatLng } from 'react-native-maps';
+import { circle, point, randomPoint, bbox, BBox, Feature, Point, distance, lineString, Polygon, polygon } from '@turf/turf';
+import randomPointsOnPolygon from 'random-points-on-polygon';
 import { snapArray } from './api';
 
-const generateBbox: (location: LocationData, radius: number) => BBox = (location, radius) => {
-    // generate a bbox from location and a radius
-    let circleAroundPosition = circle(point([location.coords.longitude, location.coords.latitude]), radius, { units: 'meters' })
-    return bbox(circleAroundPosition);
-}
-
 const filterFunc: (feature: Feature<Point>, location: LocationData) => boolean = (feature, location) => {
-    return distance([location.coords.longitude, location.coords.latitude], feature.geometry.coordinates, { units: 'meters' }) > 5
+    return distance([location.coords.longitude, location.coords.latitude], feature.geometry.coordinates, { units: 'meters' }) < 10
 }
 
-export const initMarkerList: (location: LocationData, len: number) => Feature<Point>[] = (location, len) => {
-    let markerArray = randomPoint(len, { bbox: generateBbox(location, 1000) }).features;
+export const initMarkerList: (boundary: LatLng[], len: number) => Feature<Point>[] = (boundary, len) => {
+    let poly = polygon([[...boundary.map(el => [el.longitude, el.latitude]), [boundary[0].longitude, boundary[0].latitude]]]);
+    let markerArray = randomPointsOnPolygon(len, poly)
     return markerArray;
 }
 
-export const initSnappedMarkerList: (location: LocationData, len: number) => Promise<Feature<Point>[]> = async (location, len) => {
-    let markerArray = randomPoint(len, { bbox: generateBbox(location, 1000) }).features;
+export const initSnappedMarkerList: (boundary: LatLng[], len: number) => Promise<Feature<Point>[]> = async (boundary, len) => {
+    let poly = polygon([[...boundary.map(el => [el.longitude, el.latitude]), [boundary[0].longitude, boundary[0].latitude]]]);
+    let markerArray = randomPointsOnPolygon(len, poly)
     let updatedArray = await snapArray(markerArray);
     return updatedArray;
 }
 
-export const filterMarkersByProximity: (location: LocationData, markerList: Feature<Point>[]) => Feature<Point>[] = (location, markerList) => {
-    let returnedList: Feature<Point>[] = [...markerList].filter(feature => filterFunc(feature, location));
-    return returnedList;
+export const findAdjacentMarker: (location: LocationData, markerList: Feature<Point>[]) => Feature<Point> = (location, markerList) => {
+    let marker: Feature<Point> = markerList.find(feature => filterFunc(feature, location));
+    return marker;
 }

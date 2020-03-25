@@ -4032,6 +4032,11 @@ geojson-equality@0.1.6:
   dependencies:
     deep-equal "^1.0.0"
 
+geojson-random@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/geojson-random/-/geojson-random-0.2.2.tgz#ab4838f126adc5e16f8f94e655def820f9119dbc"
+  integrity sha1-q0g48SatxeFvj5TmVd74IPkRnbw=
+
 geojson-rbush@2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/geojson-rbush/-/geojson-rbush-2.1.0.tgz#3bd73be391fc10b0ae693d9b8acea2aae0b83a8d"
@@ -5139,7 +5144,7 @@ minimatch@^3.0.4:
   dependencies:
     brace-expansion "^1.1.7"
 
-minimist@^1.1.1, minimist@^1.2.0, minimist@^1.2.5:
+minimist@^1.1.0, minimist@^1.1.1, minimist@^1.2.0, minimist@^1.2.5:
   version "1.2.5"
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.5.tgz#67d66014b66a6a8aaa0c083c5fd58df4e4e97602"
   integrity sha512-FM9nNUYrRBAELZQT3xeZQ7fmMOBg6nWNmJKTcgsJeaLstP/UODVpGsr5OhXhhXg6f+qtJ8uiZ+PUxkDWcgIXLw==
@@ -5752,6 +5757,16 @@ quickselect@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/quickselect/-/quickselect-2.0.0.tgz#f19680a486a5eefb581303e023e98faaf25dd018"
   integrity sha512-RKJ22hX8mHe3Y6wH/N3wCM6BWtjaxIyyUIkpHOvfFnxdI4yD4tBXEBKSbriGujF6jnSVkJrffuo6vxACiSSxIw==
+
+random-points-on-polygon@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/random-points-on-polygon/-/random-points-on-polygon-0.0.4.tgz#eaf3192253359f32a518a5c876d6e8e668f00acf"
+  integrity sha1-6vMZIlM1nzKlGKXIdtbo5mjwCs8=
+  dependencies:
+    turf-extent "^1.0.4"
+    turf-featurecollection "^1.0.1"
+    turf-inside "^1.1.4"
+    turf-random "^1.0.2"
 
 range-parser@~1.2.1:
   version "1.2.1"
@@ -6716,10 +6731,41 @@ topojson-server@3.x:
   dependencies:
     commander "2"
 
+turf-extent@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/turf-extent/-/turf-extent-1.0.4.tgz#9f28ce11af916ada88862a062074658ba3fe0f01"
+  integrity sha1-nyjOEa+RatqIhioGIHRli6P+DwE=
+  dependencies:
+    turf-meta "^1.0.2"
+
+turf-featurecollection@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/turf-featurecollection/-/turf-featurecollection-1.0.1.tgz#eccd1cf9124176bfc6db197cbb45d6de55f724c5"
+  integrity sha1-7M0c+RJBdr/G2xl8u0XW3lX3JMU=
+
+turf-inside@^1.1.4:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/turf-inside/-/turf-inside-1.1.4.tgz#9a980bd113595c04826459ca6adffdaa79553fb1"
+  integrity sha1-mpgL0RNZXASCZFnKat/9qnlVP7E=
+  dependencies:
+    minimist "^1.1.0"
+
 turf-jsts@*:
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/turf-jsts/-/turf-jsts-1.2.3.tgz#59757f542afbff9a577bbf411f183b8f48d38aa4"
   integrity sha512-Ja03QIJlPuHt4IQ2FfGex4F4JAr8m3jpaHbFbQrgwr7s7L6U8ocrHiF3J1+wf9jzhGKxvDeaCAnGDot8OjGFyA==
+
+turf-meta@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/turf-meta/-/turf-meta-1.0.2.tgz#74d4c495938eb24772a70b31a157ee3d4fd6ba1b"
+  integrity sha1-dNTElZOOskdypwsxoVfuPU/Wuhs=
+
+turf-random@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/turf-random/-/turf-random-1.0.2.tgz#398632082086eb62b56f78e66777675f5720c263"
+  integrity sha1-OYYyCCCG62K1b3jmZ3dnX1cgwmM=
+  dependencies:
+    geojson-random "^0.2.2"
 
 two-product@^1.0.2:
   version "1.0.2"

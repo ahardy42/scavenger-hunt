@@ -26,7 +26,7 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
 
         if (!formState.activity || !formState.distance) return;
 
-        navigation.navigate('Map');
+        navigation.navigate('Bbox');
 
     }
 
