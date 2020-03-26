@@ -32,13 +32,13 @@ export default function MapScreen({ navigation }: HomeScreenProps) {
 
     const [region] = useRegionContext();
     const [location, setLocation] = React.useState<LocationData>(null);
-    const removeRef = React.useRef(null);
-    const removeHeadingRef = React.useRef(null);
+    const removeRef = React.useRef<() => void>(null);
+    const removeHeadingRef = React.useRef<() => void>(null);
     const [timer, setTimer] = React.useState<number>(5);
     const countDownTimerRef = React.useRef<number>(null);
     const gameTimerRef = React.useRef<number>(null);
     const [formState] = useFormContext();
-    const [markerState, markerDispatch] = useMarkerContext();
+    const [markerState, markerDispatch, isGameOver] = useMarkerContext();
     const [heading, setHeading] = React.useState<number>(null);
     const [isHeading, setIsHeading] = React.useState<boolean>(false);
     const [isLocation, setIsLocation] = React.useState<boolean>(false);
@@ -47,6 +47,12 @@ export default function MapScreen({ navigation }: HomeScreenProps) {
 
     // refs
     const mapRef = React.useRef(null);
+
+    // funcs
+    const handleModalClose: (func: () => void) => void = func => {
+        markerDispatch({type: 'RESET_STATE'});
+        func();
+    }
 
     // get location of user on load
     // start following location / stop following based on a boolean
@@ -74,6 +80,11 @@ export default function MapScreen({ navigation }: HomeScreenProps) {
 
         _followLocationAsync();
 
+        return () => {
+            removeHeadingRef.current.call(null);
+            removeRef.current.call(null);
+        }
+
     }, []);
 
     // start countdown
@@ -81,6 +92,10 @@ export default function MapScreen({ navigation }: HomeScreenProps) {
         countDownTimerRef.current = window.setInterval(() => {
             setTimer(time => time - 1)
         }, 1000);
+
+        return () => {
+            clearInterval(countDownTimerRef.current);
+        }
     }, [])
 
     React.useEffect(() => {
@@ -93,7 +108,12 @@ export default function MapScreen({ navigation }: HomeScreenProps) {
     React.useEffect(() => {
         gameTimerRef.current = window.setInterval(() => {
             setTime(time => time + 1);
-        }, 1000)
+        }, 1000);
+
+        return () => {
+            clearInterval(gameTimerRef.current);
+        }
+
     }, [])
 
     // remove nearby markers on location change
@@ -121,10 +141,16 @@ export default function MapScreen({ navigation }: HomeScreenProps) {
         }
     }, [isLocation, formState.difficulty])
 
+    React.useEffect(() => {
+        if (isGameOver) {
+            clearInterval(gameTimerRef.current);
+        }
+    }, [isGameOver])
+
     return (
         <View style={styles.container}>
             <PointsTally />
-            <StartModal timer={timer} />
+            <StartModal timer={timer} isGameOver={isGameOver} handleModalClose={handleModalClose}/>
             <MapView
                 ref={mapRef}
                 style={styles.mapStyle}
