@@ -2,7 +2,6 @@ import React from 'react';
 import { StyleSheet, View, Dimensions } from 'react-native';
 import { RootStackParamList } from '../App';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { LocationData, Accuracy } from 'expo-location';
 // utilties
 import { useFormContext } from '../context/FormContext';
 import { useMarkerContext } from '../context/MarkerContext';
@@ -12,8 +11,8 @@ import { usePolygonCreator, PolyBoundary } from '../components/PolyBoundary';
 import PolyButton from '../components/PolyButton';
 import MapView, { Region, LatLng } from 'react-native-maps';
 import Instructions from '../components/Instructions';
-import { StackActions } from '@react-navigation/native';
 import { useRegionContext } from '../context/RegionContext';
+import HomeButton from '../components/HomeButton';
 
 type ProfileScreenNavigationProp = StackNavigationProp<
     RootStackParamList,
@@ -40,11 +39,24 @@ export default function BboxCreateScreen({ navigation }: BboxCreateProps) {
     const [isFollowingUser, setFollowing] = React.useState<boolean>(true);
     const [finalRegion, setRegion] = useRegionContext();
 
+    const returnLen: () => number = () => {
+        switch (formState.distance) {
+            case 'short':
+                return 6;
+            case 'medium':
+                return 10;
+            case 'long':
+                return 14;
+            default:
+                return 6
+        }
+    }
+
     React.useEffect(() => {
         if (boundary.length) {
             // init markers
             if (formState.activity === 'on-road') {
-                initSnappedMarkerList(boundary, 10)
+                initSnappedMarkerList(boundary, returnLen())
                     .then(list => {
                         markerDispatch({type: 'SET_LIST', payload: list})
                     })
@@ -52,7 +64,7 @@ export default function BboxCreateScreen({ navigation }: BboxCreateProps) {
                         console.log(e);
                     })
             } else {
-                let list = initMarkerList(boundary, 10);
+                let list = initMarkerList(boundary, returnLen());
                 console.log('list is', list)
                 markerDispatch({type: 'SET_LIST', payload: list})
             }
@@ -83,6 +95,7 @@ export default function BboxCreateScreen({ navigation }: BboxCreateProps) {
             </MapView>
             <Instructions coordsLen={coords.length}/>
             <PolyButton coordsLen={coords.length} coords={coords} setBoundary={setBoundary}/>
+            <HomeButton handlePress={() => navigation.navigate('Home')} />
         </View>
     );
 }

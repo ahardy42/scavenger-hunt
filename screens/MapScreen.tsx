@@ -16,6 +16,7 @@ import MarkerList from '../components/MarkerList';
 import StartModal from '../components/StartModal';
 import PointsTally from '../components/PointsTally';
 import MapButtons from '../components/MapButtons';
+import HomeButton from '../components/HomeButton';
 
 type ProfileScreenNavigationProp = StackNavigationProp<
     RootStackParamList,
@@ -126,6 +127,7 @@ export default function MapScreen({ navigation }: HomeScreenProps) {
                 <MarkerList markerList={markerState.markers} />
             </MapView>
             <MapButtons mapRef={mapRef} handleCompass={setIsHeading} handleLocation={setIsLocation} />
+            <HomeButton handlePress={() => navigation.navigate('Home')} />
         </View>
     );
 }
