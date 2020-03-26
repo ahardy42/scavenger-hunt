@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer } from 'react';
+import React, { createContext, useContext, useReducer, useState } from 'react';
 import { Feature, Point } from '@turf/turf';
 
 type ProviderProps = {
@@ -42,16 +42,24 @@ export const MarkerContext = createContext(null);
 export const MarkerProvider = ({ children }: ProviderProps) => {
 
     const [markerState, markerDispatch] = useReducer(reducer, initialState);
+    const [isGameOver, setGameOver] = useState<boolean>(false)
 
     React.useEffect(() => {
-        console.log('marker state:', markerState)
+        if (markerState.markerListlen && markerState.markerListlen === markerState.numHit) {
+            return setGameOver(true);
+        }
+        
+        if (!markerState.markerListlen) {
+            return setGameOver(false);
+        }
+
     }, [markerState]);
     
     return (
-        <MarkerContext.Provider value={[markerState, markerDispatch]}>
+        <MarkerContext.Provider value={[markerState, markerDispatch, isGameOver]}>
             {children}
         </MarkerContext.Provider>
     );
 }
 
-export const useMarkerContext: () => [MarkerState, React.Dispatch<MarkerActions>] = () => useContext(MarkerContext);
+export const useMarkerContext: () => [MarkerState, React.Dispatch<MarkerActions>, boolean] = () => useContext(MarkerContext);
