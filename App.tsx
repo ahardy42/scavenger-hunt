@@ -1,19 +1,35 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import HomeScreen from './screens/HomeScreen';
+import MapScreen from './screens/MapScreen';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { FormProvider } from './context/FormContext';
+import { MarkerProvider } from './context/MarkerContext';
+import { RegionProvider } from './context/RegionContext';
+import BboxCreateScreen from './screens/BboxCreateScreen';
+
+export type RootStackParamList = {
+  Home: undefined,
+  Bbox: undefined,
+  Map: undefined
+}
+
+const Stack = createStackNavigator<RootStackParamList>();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-    </View>
+    <NavigationContainer>
+      <FormProvider>
+        <MarkerProvider>
+          <RegionProvider>
+            <Stack.Navigator initialRouteName='Home'>
+              <Stack.Screen options={{headerShown: false}} name='Home' component={HomeScreen}/>
+              <Stack.Screen options={{headerShown: false}} name='Bbox' component={BboxCreateScreen}/>
+              <Stack.Screen options={{headerShown: false}} name='Map' component={MapScreen}/>
+            </Stack.Navigator>
+          </RegionProvider>
+        </MarkerProvider>
+      </FormProvider>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
