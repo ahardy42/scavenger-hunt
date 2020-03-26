@@ -4,8 +4,8 @@ import { circle, point, randomPoint, bbox, BBox, Feature, Point, distance, lineS
 import randomPointsOnPolygon from 'random-points-on-polygon';
 import { snapArray } from './api';
 
-const filterFunc: (feature: Feature<Point>, location: LocationData) => boolean = (feature, location) => {
-    return distance([location.coords.longitude, location.coords.latitude], feature.geometry.coordinates, { units: 'meters' }) < 10
+const filterFunc: (feature: Feature<Point>, location: LocationData, vicinityRadius: number) => boolean = (feature, location, vicinityRadius) => {
+    return distance([location.coords.longitude, location.coords.latitude], feature.geometry.coordinates, { units: 'meters' }) < vicinityRadius
 }
 
 export const initMarkerList: (boundary: LatLng[], len: number) => Feature<Point>[] = (boundary, len) => {
@@ -21,7 +21,7 @@ export const initSnappedMarkerList: (boundary: LatLng[], len: number) => Promise
     return updatedArray;
 }
 
-export const findAdjacentMarker: (location: LocationData, markerList: Feature<Point>[]) => Feature<Point> = (location, markerList) => {
-    let marker: Feature<Point> = markerList.find(feature => filterFunc(feature, location));
+export const findAdjacentMarker: (location: LocationData, markerList: Feature<Point>[], vicinityRadius: number) => Feature<Point> = (location, markerList, vicinityRadius) => {
+    let marker: Feature<Point> = markerList.find(feature => filterFunc(feature, location, vicinityRadius));
     return marker;
 }
