@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { useFormContext } from '../context/FormContext';
-import { Icon } from 'react-native-elements'
+import { Icon } from 'react-native-elements';
 
 type MapButtonProps = {
     handleCompass?: React.Dispatch<React.SetStateAction<boolean>>,
@@ -41,12 +41,5 @@ const styles = StyleSheet.create({
         left: 15,
         flexDirection: 'column',
         zIndex: 300
-    },
-    button: {
-        width: 100,
-        height: 100,
-        borderRadius: 50,
-        justifyContent: 'center',
-        alignItems: 'center'
     }
 })
