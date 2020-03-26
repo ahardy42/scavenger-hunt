@@ -12,10 +12,10 @@ export default function MarkerList({ markerList }: MarkerProps) {
 
     return (
         <>
-            {markerList.map(marker => {
+            {markerList.map((marker, i) => {
                 return (
                     <Marker
-                        key={marker.geometry.coordinates[0]}
+                        key={i}
                         coordinate={{ longitude: marker.geometry.coordinates[0], latitude: marker.geometry.coordinates[1] }}
                     >
                         <Svg height='25' width='25'>
