@@ -1,21 +1,33 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { Card } from 'react-native-material-ui';
 import { useMarkerContext } from '../context/MarkerContext';
+import { Badge } from 'react-native-elements';
+import Svg, { Path } from 'react-native-svg';
 
 export default function PointsTally() {
 
     const [markerState] = useMarkerContext();
 
-    const { markerListlen, numHit } = markerState;
+    const { numHit, markerListlen } = markerState;
+
+    const setStatusColor: () => 'success'|'error'|'warning' = () => {
+        let ratio = numHit / markerListlen;
+        if (ratio > 0.75) {
+            return 'success'
+        }
+        if (ratio > 0.5) {
+            return 'warning'
+        }
+        return 'error'
+    }
+    
     return (
         <View style={styles.container}>
-            <Card >
-                <View>
-                    <Text style={styles.text}>Points: {numHit * 10}</Text>
-                    <Text style={styles.text}>Markers: {markerListlen}</Text>
-                </View>
-            </Card>
+            <Svg height='50' width='50'>
+                <Path d="M502,0H0V502" fill="#FFF" />
+                <Path d="M0,50H50V0" fill="orange" />
+            </Svg>
+            <Badge value={numHit} status={setStatusColor()} badgeStyle={{width: 25, height: 25, borderRadius: 15}} containerStyle={{position: 'absolute', top: -4, right: -4}}/>
         </View>
     );
 }
@@ -23,7 +35,7 @@ export default function PointsTally() {
 const styles = StyleSheet.create({
     container: {
         position: 'absolute',
-        top: 25,
+        top: 45,
         padding: 5,
         borderRadius: 3,
         shadowOffset: {
@@ -34,8 +46,6 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.6,
         shadowColor: 'black',
         right: 15,
-        height: 50,
-        width: 120,
         zIndex: 100
     },
     text: {
