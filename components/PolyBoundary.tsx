@@ -23,11 +23,12 @@ export function PolyBoundary({ coords }: PolyProps) {
 
     return (
         <>
-            {coords.length < 2 && <Circle center={coords[0]} radius={5} strokeWidth={5} strokeColor='green'/>}
-            {coords.length < 3 && <Polyline coordinates={coords} strokeWidth={5} strokeColor='green'/>}
+            {coords.length < 2 && <Circle center={coords[0]} radius={5} strokeWidth={5} strokeColor='rgb(255, 165, 0)'/>}
+            {coords.length < 3 && <Polyline coordinates={coords} strokeWidth={5} strokeColor='rgb(255, 165, 0)'/>}
             <Polygon
                 coordinates={coords}
-                strokeColor='green'
+                strokeColor='rgb(255, 165, 0)'
+                fillColor='rgba(255, 165, 0, 0.4)'
                 strokeWidth={5}
             />
         </>

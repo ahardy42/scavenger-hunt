@@ -20,7 +20,9 @@ export default function MyRadioButton({ checked, height, value, handlePress, chi
 
     const styles = StyleSheet.create({
         button: {
-            backgroundColor: 'green',
+            backgroundColor: '#fff',
+            borderColor: 'orange',
+            borderWidth: 2,
             shadowColor: 'black',
             borderRadius: 3,
             flex: 1,
@@ -36,13 +38,14 @@ export default function MyRadioButton({ checked, height, value, handlePress, chi
             shadowRadius: 3
         },
         checkedButton: {
+            backgroundColor: 'orange',
             shadowOffset: {
                 width: 0,
                 height: 0
             }
         },
         text: {
-            fontSize: 16
+            fontSize: 20
         }
     })
 
@@ -51,7 +54,7 @@ export default function MyRadioButton({ checked, height, value, handlePress, chi
             onPress={_handlePress}
             style={checked ? StyleSheet.flatten([styles.button, styles.checkedButton]) : styles.button}
         >
-            <Text>{children}</Text>
+            <Text style={styles.text}>{children}</Text>
         </TouchableOpacity>
     );
 }

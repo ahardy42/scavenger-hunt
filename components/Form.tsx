@@ -1,6 +1,6 @@
 import React from 'react'
 import { StyleSheet, View, Text } from 'react-native';
-import { RadioButton } from 'react-native-material-ui';
+import { Card, Divider } from 'react-native-elements';
 import { useFormContext } from '../context/FormContext';
 import MyRadioButton from './MyRadioButton';
 
@@ -21,8 +21,7 @@ export default function Form({ children, buttonsArr, contextName }: FormProps) {
     const value = formState[contextName.slice(4).toLowerCase()]
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.text}>{children}</Text>
+        <Card containerStyle={styles.container} title={children}>
             <View style={styles.buttonContainer}>
                 {buttonsArr.map((el, i) => {
                     return (
@@ -30,20 +29,20 @@ export default function Form({ children, buttonsArr, contextName }: FormProps) {
                     );
                 })}
             </View>
-        </View>
+        </Card>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 4,
-        marginTop: 5
+        flex: 5,
+        marginTop: 10,
+        borderRadius: 10,
+        display: 'flex',
+        backgroundColor: 'rgba(255, 255, 255, 0.6)'
     },
     buttonContainer: {
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        alignItems: 'center'
+        flexDirection: 'row'
     },
     text: {
         fontSize: 25,

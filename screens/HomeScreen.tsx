@@ -1,17 +1,17 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Dimensions, ImageBackground } from 'react-native';
 import { RootStackParamList } from '../App';
 import { StackNavigationProp } from '@react-navigation/stack';
 // components
-import { Divider, Button } from 'react-native-material-ui';
+import { Button, Divider } from 'react-native-elements';
 import Header from '../components/Header';
 import Form from '../components/Form';
 // utilities
 import { useFormContext } from '../context/FormContext';
 
 type ProfileScreenNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  'Home'
+    RootStackParamList,
+    'Home'
 >;
 
 type HomeScreenProps = {
@@ -24,44 +24,63 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
 
     function handlePress() {
 
-        if (!formState.activity || !formState.distance) return;
+        if (!formState.activity || !formState.distance || !formState.difficulty) return;
 
         navigation.navigate('Bbox');
 
     }
 
     React.useEffect(() => {
-       navigation.addListener('focus', () => formDispatch({type: 'RESET_STATE'}))
+        navigation.addListener('focus', () => formDispatch({ type: 'RESET_STATE' }))
     }, [])
 
     return (
-        <View style={styles.container}>
-            <Header />
-            <Form buttonsArr={['on-road', 'off-road']} contextName='SET_ACTIVITY'>
-                Activity Type
+        <ImageBackground source={require('../assets/Topographic-Map-Pattern-5.png')} style={{ flex: 1, width: Dimensions.get('screen').width }} imageStyle={{ resizeMode: 'cover' }}>
+            <View style={styles.container}>
+                <Header />
+                <Form buttonsArr={['on-road', 'off-road']} contextName='SET_ACTIVITY'>
+                    Activity Type
             </Form>
-            <Divider />
-            <Form buttonsArr={['easy', 'medium', 'hard']} contextName='SET_DIFFICULTY'>
-                Difficulty
+                <Divider />
+                <Form buttonsArr={['easy', 'medium', 'hard']} contextName='SET_DIFFICULTY'>
+                    Difficulty
             </Form>
-            <Divider />
-            <Form buttonsArr={['short', 'medium', 'long']} contextName='SET_DISTANCE'>
-                Distance
+                <Divider />
+                <Form buttonsArr={['short', 'medium', 'long']} contextName='SET_DISTANCE'>
+                    Distance
             </Form>
-            <View style={styles.buttonWrapper}>
-                <Button onPress={handlePress} primary raised text='Start!'/>
+                <View style={styles.buttonWrapper}>
+                    <Button
+                        buttonStyle={{ borderColor: 'black' }}
+                        containerStyle={{ width: Dimensions.get('screen').width * 0.7 }}
+                        disabled={!formState.difficulty || !formState.activity || !formState.distance}
+                        onPress={handlePress}
+                        type='outline'
+                        raised
+                        title='Select Playground!'
+                    />
+                </View>
             </View>
-        </View>
+        </ImageBackground>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'column',
-        flex: 1
+        flex: 1,
     },
     buttonWrapper: {
-        flex: 1,
-        justifyContent: 'center'
+        flex: 3,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(255, 165, 0, 0.6)',
+        color: 'black',
+        marginTop: 10
+    },
+    button: {
+        width: 100,
+        fontStyle: 'normal',
+        fontSize: 20
     }
 })

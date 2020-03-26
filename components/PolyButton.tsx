@@ -24,10 +24,11 @@ export default function PolyButton({ coordsLen, coords, setBoundary }) {
 const styles = StyleSheet.create({
     button: {
         position: 'absolute',
-        backgroundColor: '#fff',
+        backgroundColor: 'rgba(255, 165, 0, 0.8)',
+        color: '#fff',
         bottom: 50,
-        left: '50%',
-        marginLeft: -50,
+        left: '25%',
+        width: '50%',
         padding: 10,
         borderRadius: 5,
         shadowColor: '#000',
@@ -40,7 +41,7 @@ const styles = StyleSheet.create({
         zIndex: 500
     },
     text: {
-        fontSize: 15,
+        fontSize: 25,
         textAlign: 'center'
     }
 })

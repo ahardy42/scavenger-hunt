@@ -19,8 +19,10 @@ const styles = StyleSheet.create({
     container: {
         position: 'absolute',
         top: 35,
-        left: 0,
-        width: '100%'
+        left: '5%',
+        width: '90%',
+        borderRadius: 5,
+        backgroundColor: 'rgba(255, 165, 0, 0.6)',
     },
     text: {
         fontSize: 30,

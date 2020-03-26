@@ -23,7 +23,7 @@ export default function App() {
         <MarkerProvider>
           <RegionProvider>
             <Stack.Navigator initialRouteName='Home'>
-              <Stack.Screen name='Home' component={HomeScreen}/>
+              <Stack.Screen options={{headerShown: false}} name='Home' component={HomeScreen}/>
               <Stack.Screen options={{headerShown: false}} name='Bbox' component={BboxCreateScreen}/>
               <Stack.Screen options={{headerShown: false}} name='Map' component={MapScreen}/>
             </Stack.Navigator>
