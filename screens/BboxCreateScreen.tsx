@@ -34,7 +34,7 @@ export default function BboxCreateScreen({ navigation }: BboxCreateProps) {
 
     const [boundary, setBoundary] = React.useState<LatLng[]>([]);
     const [formState] = useFormContext();
-    const [coords, addToPolygon] = usePolygonCreator();
+    const [coords, addToPolygon, resetPolygon] = usePolygonCreator();
     const [markerState, markerDispatch] = useMarkerContext();
     const [isFollowingUser, setFollowing] = React.useState<boolean>(true);
     const [finalRegion, setRegion] = useRegionContext();
@@ -94,7 +94,7 @@ export default function BboxCreateScreen({ navigation }: BboxCreateProps) {
                 <PolyBoundary coords={coords}/>
             </MapView>
             <Instructions coordsLen={coords.length}/>
-            <PolyButton coordsLen={coords.length} coords={coords} setBoundary={setBoundary}/>
+            <PolyButton resetPolygon={resetPolygon} coordsLen={coords.length} coords={coords} setBoundary={setBoundary}/>
             <HomeButton handlePress={() => navigation.navigate('Home')} />
         </View>
     );

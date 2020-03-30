@@ -27,7 +27,7 @@ export default function PointsTally() {
                 <Path d="M502,0H0V502" fill="#FFF" />
                 <Path d="M0,50H50V0" fill="orange" />
             </Svg>
-            <Badge value={numHit} status={setStatusColor()} badgeStyle={{width: 25, height: 25, borderRadius: 15}} containerStyle={{position: 'absolute', top: -4, right: -4}}/>
+            <Badge value={`${numHit}/${markerListlen}`} status={setStatusColor()} badgeStyle={{width: 25, height: 25, borderRadius: 15}} containerStyle={{position: 'absolute', top: -4, right: -4}}/>
         </View>
     );
 }
