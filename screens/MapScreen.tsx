@@ -119,7 +119,8 @@ export default function MapScreen({ navigation }: HomeScreenProps) {
     // remove nearby markers on location change
     React.useEffect(() => {
         if (location) {
-            let nearbyMarker = findAdjacentMarker(location, markerState.markers);
+            let vicinityRadius = formState.activity === 'on-road' ? 25 : 10
+            let nearbyMarker = findAdjacentMarker(location, markerState.markers, vicinityRadius);
             if (nearbyMarker !== undefined) {
                 markerDispatch({ type: 'DELETE_MARKER', payload: nearbyMarker })
             }
@@ -161,7 +162,7 @@ export default function MapScreen({ navigation }: HomeScreenProps) {
                 compassOffset={{x: -5, y: 25}}
                 showsScale
             >
-                <MarkerList markerList={markerState.markers} />
+                <MarkerList markerList={markerState.markers} vicinityRadius={formState.activity === 'on-road' ? 25 : 10} />
             </MapView>
             <MapButtons mapRef={mapRef} handleCompass={setIsHeading} handleLocation={setIsLocation} />
             <HomeButton handlePress={() => navigation.navigate('Home')} />
