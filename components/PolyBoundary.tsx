@@ -2,7 +2,7 @@ import React from 'react';
 import { Polygon, MapEvent, LatLng, Point, Polyline, Circle,  } from 'react-native-maps';
 
 // hook to emit polygon / editing state
-export const usePolygonCreator: () => [LatLng[], (e: any) => void] = () => {
+export const usePolygonCreator: () => [LatLng[], (e: any) => void, () => void] = () => {
 
     const [coords, setCoords] = React.useState<LatLng[]>([]);
 
@@ -11,7 +11,11 @@ export const usePolygonCreator: () => [LatLng[], (e: any) => void] = () => {
         setCoords(prevState => [...prevState, e.nativeEvent.coordinate])
     }
 
-    return [coords, addToPolygon]
+    const resetPolygon: () => void = () => {
+        setCoords([])
+    }
+
+    return [coords, addToPolygon, resetPolygon]
 }
 
 // PolyBoundary Component
