@@ -10,13 +10,15 @@ const filterFunc: (feature: Feature<Point>, location: LocationData, vicinityRadi
 
 export const initMarkerList: (boundary: LatLng[], len: number) => Feature<Point>[] = (boundary, len) => {
     let poly = polygon([[...boundary.map(el => [el.longitude, el.latitude]), [boundary[0].longitude, boundary[0].latitude]]]);
-    let markerArray = randomPointsOnPolygon(len, poly)
+    let markerArray: Feature<Point>[] = randomPointsOnPolygon(len, poly)
+    markerArray.forEach((marker, index) => marker.id = index)
     return markerArray;
 }
 
 export const initSnappedMarkerList: (boundary: LatLng[], len: number) => Promise<Feature<Point>[]> = async (boundary, len) => {
     let poly = polygon([[...boundary.map(el => [el.longitude, el.latitude]), [boundary[0].longitude, boundary[0].latitude]]]);
-    let markerArray = randomPointsOnPolygon(len, poly)
+    let markerArray: Feature<Point>[] = randomPointsOnPolygon(len, poly)
+    markerArray.forEach((marker, index) => marker.id = index)
     let updatedArray = await snapArray(markerArray);
     return updatedArray;
 }

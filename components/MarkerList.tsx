@@ -13,7 +13,7 @@ export default function MarkerList({ markerList, vicinityRadius }: MarkerProps) 
 
     return (
         <>
-            {markerList.map((marker, i) => {
+            {markerList.map(marker => {
                 return (
                     <>
                         <Circle
@@ -23,7 +23,7 @@ export default function MarkerList({ markerList, vicinityRadius }: MarkerProps) 
                             fillColor='rgba(255, 165, 0, 0.3)'
                         />
                         <Marker
-                            key={i}
+                            key={marker.id}
                             coordinate={{ longitude: marker.geometry.coordinates[0], latitude: marker.geometry.coordinates[1] }}
                         >
                             <Svg height='25' width='25'>
