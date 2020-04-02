@@ -3,7 +3,6 @@ import { Position, Feature, Point } from '@turf/turf';
 const snapToRoads: (postion: Position) => Promise<Position> = async position => {
     let response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${position[1]}&lon=${position[0]}&format=json&osm_type=W`);
     let json = await response.json();
-    console.log(json)
 
     return [parseFloat(json.lon), parseFloat(json.lat)]
 }

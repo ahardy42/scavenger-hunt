@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Text } from 'react-native';
 import { Marker, Circle } from 'react-native-maps';
 import Svg, { Path } from 'react-native-svg';
@@ -15,7 +15,7 @@ export default function MarkerList({ markerList, vicinityRadius }: MarkerProps) 
         <>
             {markerList.map(marker => {
                 return (
-                    <>
+                    <Fragment key={marker.id}>
                         <Circle
                             center={{ longitude: marker.geometry.coordinates[0], latitude: marker.geometry.coordinates[1] }}
                             radius={vicinityRadius}
@@ -23,7 +23,6 @@ export default function MarkerList({ markerList, vicinityRadius }: MarkerProps) 
                             fillColor='rgba(255, 165, 0, 0.3)'
                         />
                         <Marker
-                            key={marker.id}
                             coordinate={{ longitude: marker.geometry.coordinates[0], latitude: marker.geometry.coordinates[1] }}
                         >
                             <Svg height='25' width='25'>
@@ -31,7 +30,7 @@ export default function MarkerList({ markerList, vicinityRadius }: MarkerProps) 
                                 <Path d="M0,25H25V0" fill="orange" />
                             </Svg>
                         </Marker>
-                    </>
+                    </Fragment>
                 );
             })}
         </>

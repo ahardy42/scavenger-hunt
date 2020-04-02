@@ -2,16 +2,27 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import moment from 'moment';
 import { Icon } from 'react-native-elements';
+import { useStopWatch } from '../utils/useStopWatch';
 
-type TimerProps = {
-    time: number
+type TimerDisplayProps = {
+    countDown: number
 }
 
-export default function TimerDisplay({ time }: TimerProps) {
+export default function TimerDisplay({ countDown }: TimerDisplayProps) {
+
+    // game time
+    const [seconds, start] = useStopWatch();
+
+    React.useEffect(() => {
+        if (countDown === 0) {
+            start();
+        }
+    }, [countDown])
+
     return (
         <View style={styles.container}>
             <Icon name='clock-o' type='font-awesome' size={40} color='orange' />
-            <Text style={styles.text}>{moment(time, 'X').format('mm:ss')}</Text>
+            <Text style={styles.text}>{moment(seconds, 'X').format('mm:ss')}</Text>
         </View>
     );
 }

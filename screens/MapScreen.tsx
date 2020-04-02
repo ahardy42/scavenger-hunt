@@ -18,6 +18,7 @@ import PointsTally from '../components/PointsTally';
 import MapButtons from '../components/MapButtons';
 import HomeButton from '../components/HomeButton';
 import TimerDisplay from '../components/TimerDisplay';
+import moment from 'moment';
 
 type ProfileScreenNavigationProp = StackNavigationProp<
     RootStackParamList,
@@ -42,8 +43,6 @@ export default function MapScreen({ navigation }: HomeScreenProps) {
     const [heading, setHeading] = React.useState<number>(null);
     const [isHeading, setIsHeading] = React.useState<boolean>(false);
     const [isLocation, setIsLocation] = React.useState<boolean>(false);
-    // game time
-    const [time, setTime] = React.useState<number>(-5);
 
     // refs
     const mapRef = React.useRef(null);
@@ -104,18 +103,6 @@ export default function MapScreen({ navigation }: HomeScreenProps) {
         }
     }, [timer])
 
-    // timing the game
-    React.useEffect(() => {
-        gameTimerRef.current = window.setInterval(() => {
-            setTime(time => time + 1);
-        }, 1000);
-
-        return () => {
-            clearInterval(gameTimerRef.current);
-        }
-
-    }, [])
-
     // remove nearby markers on location change
     React.useEffect(() => {
         if (location) {
@@ -166,7 +153,7 @@ export default function MapScreen({ navigation }: HomeScreenProps) {
             </MapView>
             <MapButtons mapRef={mapRef} handleCompass={setIsHeading} handleLocation={setIsLocation} />
             <HomeButton handlePress={() => navigation.navigate('Home')} />
-            <TimerDisplay time={time < 0 ? 0 : time} />
+            <TimerDisplay countDown={timer} />
         </View>
     );
 }
